@@ -33,4 +33,6 @@ app.use(bodyParser())
 
 app.use(router.routes()).use(router.allowedMethods());
 
-app.listen(4000)
+app.listen(config.port)
+
+console.log(`the server is start at port ${config.port}`)
