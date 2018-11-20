@@ -5,6 +5,7 @@ const bodyParser = require('koa-bodyparser');
 const koaLogger = require('koa-logger');
 const session = require('koa-session-minimal');
 const MysqlStore = require('koa-mysql-session');
+const cors = require('koa-cors');
 
 const app = new Koa();
 
@@ -23,6 +24,11 @@ const sessionMysqlConfig = {
 app.use(session({
   key: 'sess',
   store: new MysqlStore(sessionMysqlConfig),
+}))
+
+// 配置跨域中间件
+app.use(cors({
+  credentials: true
 }))
 
 // 配置控制台日志中间件

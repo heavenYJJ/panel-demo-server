@@ -6,12 +6,12 @@ exports.success = {
 
 exports.paramsError = {
   data: '',
-  errcode: '20001',
+  errcode: 20001,
   errmsg: 'params error'
 }
 
 exports.needLogin = {
   data: '',
-  errcode: '20002',
+  errcode: 20002,
   errmsg: 'need login'
 }

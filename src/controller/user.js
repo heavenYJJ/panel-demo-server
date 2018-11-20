@@ -9,11 +9,13 @@ exports.getUserList = async (ctx) => {
     ctx.body = response.paramsError
     return
   }
-  const userList = await model.findDataByPage('user_info', '*', Number(start), Number(limit))
+  const userList = await model.findDataByPage('user_info', '*', Number(start), Number(limit));
+  const total = await model.count('user_info');
   ctx.body = {
     ...response.success,
     data: {
-      list: userList
+      list: userList,
+      total: total.length ? total[0].total_count : 0
     }
   };
 }
