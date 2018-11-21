@@ -1,6 +1,7 @@
 const model = require('../utils/db')
 const types = require('../utils/type')
 const response = require('../utils/response')
+const validator = require('validator')
 
 exports.getUserList = async (ctx) => {
   const {page, limit} = ctx.query;
@@ -26,6 +27,14 @@ exports.addUser = async (ctx) => {
     ctx.body = response.paramsError
     return
   };
+  if(!validator.isEmail(email)) {
+    ctx.body = {
+      data: '',
+      errcode: 20009,
+      errmsg: '邮箱格式错误'
+    }
+    return
+  }
   const values = {
     email,
     password,
@@ -35,6 +44,16 @@ exports.addUser = async (ctx) => {
     create_time: parseInt(new Date().valueOf()/1000, 10),
     modified_time: parseInt(new Date().valueOf()/1000, 10),
     level,
+  }
+  const searchUserFromName = await model.findDataByKey('user_info', 'name', name)
+  console.log(searchUserFromName);
+  if (searchUserFromName.length) {
+    ctx.body = {
+      data: '',
+      errcode: 20010,
+      errmsg: '该账号已注册'
+    }
+    return
   }
   const addUser = await model.insertData('user_info', values);
   ctx.body = response.success
@@ -46,6 +65,14 @@ exports.editUser = async (ctx) => {
     ctx.body = response.paramsError
     return
   };
+  if(!validator.isEmail(email)) {
+    ctx.body = {
+      data: '',
+      errcode: 20009,
+      errmsg: '邮箱格式错误'
+    }
+    return
+  }
   const values = {
     email,
     password,
@@ -72,13 +99,13 @@ exports.delUser = async (ctx) => {
 }
 
 exports.login = async (ctx) => {
-  const {name, password} = ctx.request.query;
+  const {name, password} = ctx.request.body;
   if (!name || !password) {
     ctx.body = response.paramsError
     return
   };
-  const sqlUser = `SELECT * FROM user_info WHERE name = '${name}'`;
-  const selectUser = await model.query(sqlUser);
+  const selectUser = await model.findDataByKey('user_info' ,'name', name);
+  console.log(selectUser);
   if (selectUser.length && selectUser[0].password === password) {
     ctx.session = {
       name,

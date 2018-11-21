@@ -7,6 +7,6 @@ user.get('/list', checkLogin, controllerUser.getUserList);
 user.post('/add', checkLogin, controllerUser.addUser);
 user.post('/edit', checkLogin, controllerUser.editUser);
 user.post('/del', checkLogin, controllerUser.delUser);
-user.get('/login', controllerUser.login);
+user.post('/login', controllerUser.login);
 
 module.exports = user

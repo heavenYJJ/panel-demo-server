@@ -2,7 +2,7 @@
  * @Author: yangjiajun@medlinker.com 
  * @Date: 2018-11-09 14:06:19 
  * @Last Modified by: yangjiajun@medlinker.com
- * @Last Modified time: 2018-11-19 19:26:17
+ * @Last Modified time: 2018-11-21 17:12:45
  */
 
 const mysql = require('mysql');
@@ -16,6 +16,7 @@ const pool = mysql.createPool({
 });
 
 let query = function(sql, values) {
+  console.log(sql);
   return new Promise((resolve, reject) => {
     pool.getConnection(function(err, connertion) {
       connertion.query(sql, values, (err, rows) => {
@@ -38,6 +39,11 @@ let createTable = function( sql ) {
 let findDataById = function( table,  id, start, end ) {
   let  _sql =  "SELECT * FROM ?? WHERE id = ? "
   return query( _sql, [ table, id, start, end ] )
+}
+
+let findDataByKey = function( table, key, val ) {
+  let  _sql =  `SELECT * FROM ${table} WHERE ${key} = '${val}'`
+  return query( _sql, [ table, key, val ])
 }
 
 
@@ -85,4 +91,5 @@ module.exports = {
   updateData,
   select,
   count,
+  findDataByKey,
 }
