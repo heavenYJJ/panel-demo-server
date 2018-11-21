@@ -1,6 +1,6 @@
 const database = {
   USERNAME: 'root',
-  PASSWORD: 'yjj19940221',
+  PASSWORD: 'aaa111',
   DATABASE: 'panelDemo',
   HOST: '127.0.0.1',
 }
