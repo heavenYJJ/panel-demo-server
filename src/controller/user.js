@@ -2,6 +2,7 @@ const model = require('../utils/db')
 const types = require('../utils/type')
 const response = require('../utils/response')
 const validator = require('validator')
+const {encrypt, decrypt} = require('../utils/crypto');
 
 exports.getUserList = async (ctx) => {
   const {page, limit} = ctx.query;
@@ -11,11 +12,17 @@ exports.getUserList = async (ctx) => {
     return
   }
   const userList = await model.findDataByPage('user_info', '*', Number(start), Number(limit));
+  const list = userList.map(item => (
+    {
+      ...item,
+      password: ''
+    }
+  ));
   const total = await model.count('user_info');
   ctx.body = {
     ...response.success,
     data: {
-      list: userList,
+      list,
       total: total.length ? total[0].total_count : 0
     }
   };
@@ -37,7 +44,7 @@ exports.addUser = async (ctx) => {
   }
   const values = {
     email,
-    password,
+    password: encrypt(password),
     name,
     nick,
     detail_info,
@@ -75,7 +82,7 @@ exports.editUser = async (ctx) => {
   }
   const values = {
     email,
-    password,
+    password: encrypt(password),
     name,
     nick,
     detail_info,
@@ -105,8 +112,9 @@ exports.login = async (ctx) => {
     return
   };
   const selectUser = await model.findDataByKey('user_info' ,'name', name);
-  console.log(selectUser);
-  if (selectUser.length && selectUser[0].password === password) {
+  console.log('selectUser' ,selectUser);
+  console.log('password' ,encrypt(password));
+  if (selectUser.length && selectUser[0].password === encrypt(password)) {
     ctx.session = {
       name,
       id: selectUser[0].id,

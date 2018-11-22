@@ -10,6 +10,3 @@ CREATE TABLE   IF NOT EXISTS  `user_info` (
   `level` int(11) DEFAULT NULL, # 权限级别
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-INSERT INTO `user_info` set name='admin001', email='admin001@example.com', password='123456';
-INSERT INTO `user_info` set name='admin002', email='admin002@example.com', password='123456';
